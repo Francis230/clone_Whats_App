@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Chat</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Cerrar sesión</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list>
+    <ion-item *ngFor="let msg of messages">
+      <ion-label>
+        <h3 [ngStyle]="{'color': msg.user_id === userId ? 'green' : 'blue'}">
+          {{ msg.user_id === userId ? 'Tú' : msg.user_id }}
+        </h3>
+
+        <ng-container [ngSwitch]="msg.type">
+          <p *ngSwitchCase="'text'">{{ msg.content }}</p>
+
+          <img *ngSwitchCase="'image'" [src]="msg.content" style="max-width: 100%;" />
+
+          <a *ngSwitchCase="'file'" [href]="msg.content" target="_blank" style="color: darkred;">
+            📎 Archivo adjunto (click para abrir)
+          </a>
+        </ng-container>
+
+        <small>{{ msg.timestamp | date:'short' }}</small>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+
+<ion-button expand="block" color="medium" (click)="sendPhoto()">
+  Enviar Imagen
+</ion-button>
+
+<ion-button expand="block" color="tertiary" (click)="selectFile()">Enviar Archivo</ion-button>
+<input type="file" #fileInput style="display: none;" (change)="handleFileUpload($event)">
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-item lines="none">
+      <ion-input [(ngModel)]="newMessage" placeholder="Escribe un mensaje..."></ion-input>
+      <ion-button (click)="sendMessage()" slot="end">Enviar</ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>
+
