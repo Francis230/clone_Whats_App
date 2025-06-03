@@ -1,0 +1,74 @@
+/* Contenedor principal para que el chat ocupe todo el alto y scroll */
+.chat-content {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  overflow-y: auto;
+}
+
+/* Estilo de cada mensaje */
+.chat-message {
+  border-radius: 12px;
+  margin-bottom: 12px;
+  max-width: 75%;
+  padding: 10px 16px;
+  box-shadow: 0 1px 5px rgb(0 0 0 / 0.1);
+}
+
+/* Diferencia mensajes míos y otros */
+.chat-message.mine {
+  margin-left: auto;
+  background-color: #d4f8d4;
+}
+.chat-message:not(.mine) {
+  margin-right: auto;
+  background-color: #e8e8ff;
+}
+
+/* Texto y enlaces */
+.message-label h3 {
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+.message-label p {
+  margin: 0 0 6px 0;
+  word-break: break-word;
+}
+.message-label small {
+  font-size: 0.7rem;
+  color: gray;
+}
+.file-link, .location-link {
+  color: #3366cc;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.file-link:hover, .location-link:hover {
+  color: #224488;
+}
+
+/* Imágenes dentro del chat */
+img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+/* Botones con tamaño pequeño y separados */
+.buttons-row ion-button {
+  min-width: 100px;
+}
+
+/* Input y botón enviar en la misma fila */
+.input-item {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+.input-item ion-input {
+  --padding-start: 12px;
+}
+.input-item ion-button {
+  margin-left: 8px;
+  min-width: 80px;
+}

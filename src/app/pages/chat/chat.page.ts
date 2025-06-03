@@ -10,6 +10,12 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { ViewChild, ElementRef } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { supabase } from 'src/supabase';
+import { PhotoService } from 'src/app/services/photo.service'; // Ajusta la ruta si es necesario
+import { Geolocation } from '@capacitor/geolocation';
+import { HttpClient } from '@angular/common/http';
+
+
+
 
 
 @Component({
@@ -30,7 +36,10 @@ export class ChatPage implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private chatService: ChatService,
-    private toastController: ToastController
+    private photoService: PhotoService, // <- nuevo
+    private toastController: ToastController,
+    private http: HttpClient
+
   ) {}
 
   ngOnInit() {
@@ -72,50 +81,68 @@ export class ChatPage implements OnInit, OnDestroy {
     });
     toast.present();
   }
-  // Metodo para enviar fotos
+
+  // Metodo para enviar las fotos 
     async sendPhoto() {
     try {
-      const image = await Camera.getPhoto({
-        quality: 70,
-        resultType: CameraResultType.DataUrl,
-        source: CameraSource.Prompt
-      });
-
-      const base64 = image.dataUrl!;
-      const fileName = `photo.jpg`;
+      const base64 = await this.photoService.capturePhoto();
+      const fileName = `photo_${Date.now()}.jpeg`;
 
       const imageUrl = await this.chatService.uploadImage(base64, fileName);
-
       await this.chatService.sendMessage(this.userId!, imageUrl, 'image');
     } catch (err: any) {
-      this.showToast('No se pudo abrir la cámara o galería.');
+      this.showToast('Error al capturar imagen.');
+      console.error(err);
+    }
+}
+
+
+  // Método para subir archivos genéricos (PDF, Word, ZIP, etc.)
+    selectFile() {
+    // Simula un clic en el input invisible
+    this.fileInput.nativeElement.click();
+  }
+
+  async handleFileUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    try {
+      const fileUrl = await this.chatService.uploadFile(file);
+      await this.chatService.sendMessage(this.userId!, fileUrl, 'file');
+    } catch (err: any) {
+      this.showToast('Error al subir archivo');
       console.error(err);
     }
   }
 
+  // Metodo para la geolocalizacion
+    async sendLocation() {
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
 
-  // Método para subir archivos genéricos (PDF, Word, ZIP, etc.)
-  selectFile() {
-  // Simula un clic en el input invisible
-  this.fileInput.nativeElement.click();
-}
+      const mapUrl = `https://www.google.com/maps?q=${lat},${lng}`;
 
-async handleFileUpload(event: Event) {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
-  if (!file) return;
-
+      await this.chatService.sendMessage(this.userId!, mapUrl, 'location');
+    } catch (err) {
+      this.showToast('Error al obtener ubicación GPS');
+      console.error(err);
+    }
+  }
+  // Método del consumo de una api que genera un texto
+  async sendJoke() {
   try {
-    const fileUrl = await this.chatService.uploadFile(file);
-    await this.chatService.sendMessage(this.userId!, fileUrl, 'file');
-  } catch (err: any) {
-    this.showToast('Error al subir archivo');
+    const res: any = await this.http.get('https://official-joke-api.appspot.com/jokes/random').toPromise();
+    const joke = `${res.setup} - ${res.punchline}`;
+    await this.chatService.sendMessage(this.userId!, joke, 'text');
+  } catch (err) {
+    this.showToast('Error al obtener chiste');
     console.error(err);
   }
 }
-
-
-
 
 
 }

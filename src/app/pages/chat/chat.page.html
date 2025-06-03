@@ -1,28 +1,33 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Chat</ion-title>
+    <ion-title class="ion-text-center">Chat</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="logout()">Cerrar sesión</ion-button>
+      <ion-button (click)="logout()" fill="clear" color="light">
+        Cerrar sesión
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-
+<ion-content class="ion-padding chat-content">
   <ion-list>
-    <ion-item *ngFor="let msg of messages">
-      <ion-label>
-        <h3 [ngStyle]="{'color': msg.user_id === userId ? 'green' : 'blue'}">
+    <ion-item *ngFor="let msg of messages" lines="none" class="chat-message" [ngClass]="{'mine': msg.user_id === userId}">
+      <ion-label class="message-label">
+        <h3>
           {{ msg.user_id === userId ? 'Tú' : msg.user_id }}
         </h3>
 
         <ng-container [ngSwitch]="msg.type">
           <p *ngSwitchCase="'text'">{{ msg.content }}</p>
 
-          <img *ngSwitchCase="'image'" [src]="msg.content" style="max-width: 100%;" />
+          <img *ngSwitchCase="'image'" [src]="msg.content" alt="Imagen" />
 
-          <a *ngSwitchCase="'file'" [href]="msg.content" target="_blank" style="color: darkred;">
+          <a *ngSwitchCase="'file'" [href]="msg.content" target="_blank" class="file-link">
             📎 Archivo adjunto (click para abrir)
+          </a>
+
+          <a *ngSwitchCase="'location'" [href]="msg.content" target="_blank" class="location-link">
+            📍 Ver ubicación en mapa
           </a>
         </ng-container>
 
@@ -30,23 +35,50 @@
       </ion-label>
     </ion-item>
   </ion-list>
-
 </ion-content>
-
-<ion-button expand="block" color="medium" (click)="sendPhoto()">
-  Enviar Imagen
-</ion-button>
-
-<ion-button expand="block" color="tertiary" (click)="selectFile()">Enviar Archivo</ion-button>
-<input type="file" #fileInput style="display: none;" (change)="handleFileUpload($event)">
-
 
 <ion-footer>
   <ion-toolbar>
-    <ion-item lines="none">
-      <ion-input [(ngModel)]="newMessage" placeholder="Escribe un mensaje..."></ion-input>
-      <ion-button (click)="sendMessage()" slot="end">Enviar</ion-button>
-    </ion-item>
+    <ion-grid>
+      <ion-row class="ion-align-items-center ion-justify-content-center buttons-row" gutter="8">
+        <ion-col size="auto">
+          <ion-button expand="block" color="medium" size="small" fill="outline" (click)="sendPhoto()">
+            📷 Imagen
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button expand="block" color="warning" size="small" fill="outline" (click)="sendJoke()">
+            😂 Chiste
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button expand="block" color="success" size="small" fill="outline" (click)="sendLocation()">
+            📍 Ubicación
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button expand="block" color="tertiary" size="small" fill="outline" (click)="selectFile()">
+            📎 Archivo
+          </ion-button>
+          <input type="file" #fileInput style="display: none;" (change)="handleFileUpload($event)">
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item lines="none" class="input-item">
+            <ion-input
+              [(ngModel)]="newMessage"
+              placeholder="Escribe un mensaje..."
+              clearInput
+              autofocus
+              debounce="300"
+              (keyup.enter)="sendMessage()"
+            ></ion-input>
+            <ion-button fill="solid" color="primary" (click)="sendMessage()">Enviar</ion-button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-footer>
 
