@@ -72,3 +72,18 @@ img {
   margin-left: 8px;
   min-width: 80px;
 }
+
+// Cabecera
+.header-user-info {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+ion-avatar img {
+  border-radius: 50%;
+  border: 2px solid white;
+}

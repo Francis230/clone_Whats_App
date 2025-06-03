@@ -26,7 +26,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./chat.page.scss']
 })
 export class ChatPage implements OnInit, OnDestroy {
-
+  userName: string = '';
+  userPhoto: string = '';
   messages: any[] = [];
   newMessage: string = '';
   userId: string | null = null;
@@ -46,6 +47,9 @@ export class ChatPage implements OnInit, OnDestroy {
     const user = this.authService.getUser();
     if (user) {
       this.userId = user.uid;
+      this.userName = user.email || 'Sin correo';
+      const randomAvatarId = Math.floor(Math.random() * 70) + 1;
+      this.userPhoto = user.photoURL || `https://i.pravatar.cc/150?img=${randomAvatarId}`;
       this.chatService.getMessages((msgs) => {
         this.messages = msgs;
       });
@@ -62,7 +66,7 @@ export class ChatPage implements OnInit, OnDestroy {
     if (!this.newMessage.trim()) return;
 
     try {
-      await this.chatService.sendMessage(this.userId!, this.newMessage.trim(), 'text');
+      await this.chatService.sendMessage(this.userId!, this.newMessage.trim(), 'text', this.userName, this.userPhoto);
       this.newMessage = '';
     } catch (error: any) {
       this.showToast(error.message);
@@ -89,7 +93,7 @@ export class ChatPage implements OnInit, OnDestroy {
       const fileName = `photo_${Date.now()}.jpeg`;
 
       const imageUrl = await this.chatService.uploadImage(base64, fileName);
-      await this.chatService.sendMessage(this.userId!, imageUrl, 'image');
+      await this.chatService.sendMessage(this.userId!, imageUrl, 'image', this.userName, this.userPhoto);
     } catch (err: any) {
       this.showToast('Error al capturar imagen.');
       console.error(err);
@@ -110,7 +114,7 @@ export class ChatPage implements OnInit, OnDestroy {
 
     try {
       const fileUrl = await this.chatService.uploadFile(file);
-      await this.chatService.sendMessage(this.userId!, fileUrl, 'file');
+      await this.chatService.sendMessage(this.userId!, fileUrl, 'file', this.userName , this.userPhoto);
     } catch (err: any) {
       this.showToast('Error al subir archivo');
       console.error(err);
@@ -126,7 +130,7 @@ export class ChatPage implements OnInit, OnDestroy {
 
       const mapUrl = `https://www.google.com/maps?q=${lat},${lng}`;
 
-      await this.chatService.sendMessage(this.userId!, mapUrl, 'location');
+      await this.chatService.sendMessage(this.userId!, mapUrl, 'location', this.userName, this.userPhoto);
     } catch (err) {
       this.showToast('Error al obtener ubicación GPS');
       console.error(err);
@@ -137,7 +141,7 @@ export class ChatPage implements OnInit, OnDestroy {
   try {
     const res: any = await this.http.get('https://official-joke-api.appspot.com/jokes/random').toPromise();
     const joke = `${res.setup} - ${res.punchline}`;
-    await this.chatService.sendMessage(this.userId!, joke, 'text');
+    await this.chatService.sendMessage(this.userId!, joke, 'text', this.userName , this.userPhoto);
   } catch (err) {
     this.showToast('Error al obtener chiste');
     console.error(err);

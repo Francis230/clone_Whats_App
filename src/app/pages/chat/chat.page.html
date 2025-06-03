@@ -1,22 +1,41 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title class="ion-text-center">Chat</ion-title>
+    <ion-title>Chat en tiempo real</ion-title>
+    
     <ion-buttons slot="end">
-      <ion-button (click)="logout()" fill="clear" color="light">
-        Cerrar sesión
-      </ion-button>
+      <ion-item lines="none" class="header-user-info" detail="false">
+        <ion-avatar slot="start">
+          <img [src]="userPhoto || 'https://i.pravatar.cc/150?img=10'" alt="Avatar" />
+        </ion-avatar>
+        <ion-label class="ion-text-wrap">
+          <h5 style="margin: 0; color: white;">{{ userName }}</h5>
+        </ion-label>
+        <ion-button
+          (click)="logout()"
+          fill="outline"
+          size="small"
+          color="light"
+          style="margin-left: 8px;"
+        >
+          Cerrar sesión
+        </ion-button>
+      </ion-item>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content class="ion-padding chat-content">
   <ion-list>
     <ion-item *ngFor="let msg of messages" lines="none" class="chat-message" [ngClass]="{'mine': msg.user_id === userId}">
+       <ion-avatar slot="start">
+         <img [src]="msg.user_photo || 'https://i.pravatar.cc/150?img=11'" />
+       </ion-avatar>
       <ion-label class="message-label">
-        <h3>
-          {{ msg.user_id === userId ? 'Tú' : msg.user_id }}
-        </h3>
-
+        <!-- <h3>
+          {{ msg.user_id === userId ? 'Tú' : msg.user_email || msg.user_id  }}
+        </h3> -->
+        <h3>{{ msg.user_email || 'Anónimo' }}</h3>
         <ng-container [ngSwitch]="msg.type">
           <p *ngSwitchCase="'text'">{{ msg.content }}</p>
 

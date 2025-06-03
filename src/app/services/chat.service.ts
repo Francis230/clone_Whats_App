@@ -34,9 +34,11 @@ export class ChatService {
   }
 
   // Insertar un nuevo mensaje
-  async sendMessage(userId: string, content: string, type: string = 'text') {
+  async sendMessage(userId: string, content: string, type: string = 'text', userEmail?: string, userPhoto?: string) {
     const { error } = await this.supabase.from('messages').insert({
       user_id: userId,
+      user_email: userEmail,
+      user_photo: userPhoto,
       content,
       type,
       timestamp: new Date()
@@ -58,21 +60,35 @@ export class ChatService {
     async uploadImage(base64Data: string, fileName: string): Promise<string> {
     const filePath = `images/${Date.now()}_${fileName}`;
 
+    // Convertir base64 a Blob
+    const blob = this.base64ToBlob(base64Data);
+
     const { error } = await this.supabase.storage
-        .from('chat-media')
-        .upload(filePath, base64Data, {
+      .from('chat-media')
+      .upload(filePath, blob, {
         contentType: 'image/jpeg',
         upsert: true
-        });
+      });
 
     if (error) throw error;
 
-    // Obtener la URL pública
     const { data } = this.supabase.storage.from('chat-media').getPublicUrl(filePath);
     return data.publicUrl;
+  }
+
+  base64ToBlob(base64: string): Blob {
+    const byteString = atob(base64.split(',')[1]);
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const intArray = new Uint8Array(arrayBuffer);
+
+    for (let i = 0; i < byteString.length; i++) {
+      intArray[i] = byteString.charCodeAt(i);
     }
 
-        // Subir archivo a Supabase Storage
+    return new Blob([intArray], { type: 'image/jpeg' });
+  }
+
+    // Subir archivo a Supabase Storage
     async uploadFile(file: File): Promise<string> {
     const path = `files/${Date.now()}_${file.name}`;
 
