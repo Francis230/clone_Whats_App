@@ -66,3 +66,53 @@ export const environment = {
 
 ---
 
+### Inclusión de firebase y Supabse en el archivo “enviroment”:
+
+
+![image](https://github.com/user-attachments/assets/0769cf7d-123d-4e98-bf7c-ab1f072c67e1)
+
+---
+### Generación de la tabla en supabase de los mensajes:
+
+![image](https://github.com/user-attachments/assets/2411267a-030c-4d52-9b93-8ee5b3636bb3)
+
+
+---
+
+### Generación del bucket para almacenamiento de las imágenes y de los archivos:
+
+
+![image](https://github.com/user-attachments/assets/1e137bdb-4dc1-4706-bcf5-aedf394203a4)
+
+---
+
+### La autenticación de Firebase de cada correo y del registro que se almacena aquí:
+
+
+![image](https://github.com/user-attachments/assets/4c9f2a7a-0283-454a-86c9-8b1d9fd499cb)
+
+---
+
+## Verificacion de las pantallas:
+
+- **Parntalla de Login:**
+
+![image](https://github.com/user-attachments/assets/713aec2e-451e-47dc-b5ca-62f93ed193cc)
+
+- **Parntalla de Registro:**
+
+![image](https://github.com/user-attachments/assets/54b3e19e-9df7-42fc-8afc-b5ae7110cef0)
+
+
+- **Parntalla en general del Chat:**
+
+![image](https://github.com/user-attachments/assets/298ee196-a07c-45d8-91a6-5a1162fb8067)
+
+
+---
+
+
+
+
+
+
