@@ -1,4 +1,9 @@
 # 📱 Chat en Tiempo Real con Ionic, Angular y Supabase
+---
+- **Desarrollador:**
+- Francis Aconda
+
+---
 
 Este proyecto es una aplicación de chat en tiempo real desarrollada con **Ionic Framework** y **Angular**, utilizando **Supabase** como backend para la autenticación, base de datos en tiempo real y almacenamiento de archivos.
 
@@ -41,5 +46,23 @@ Este proyecto es una aplicación de chat en tiempo real desarrollada con **Ionic
 - **Nombre:** `chat-media`
 - **Reglas:** Público (permite lectura anónima para mostrar imágenes/archivos)
 
+---
+### Instala las dependencias:
+- **npm install**
+---
 
+### Agrega las variables de entorno (en src/environments/environment.ts):
+export const environment = {
+  supabaseUrl: 'https://your-project.supabase.co',
+  supabaseKey: 'public-anon-key'
+};
+
+---
+### Estructura del proyecto:
+
+
+![image](https://github.com/user-attachments/assets/ba336264-327f-4f6f-8ab1-7a4d71ddbf26)
+
+
+---
 
